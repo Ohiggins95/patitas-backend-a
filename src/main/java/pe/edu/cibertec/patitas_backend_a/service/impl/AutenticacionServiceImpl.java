@@ -17,37 +17,39 @@ public class AutenticacionServiceImpl implements AutenticacionService {
     @Autowired
     ResourceLoader resourceLoader;
 
-
     @Override
     public String[] validarUsuario(LoginRequestDTO loginRequestDTO) throws IOException {
 
         String[] datosUsuario = null;
         Resource resource = resourceLoader.getResource("classpath:usuarios.txt");
 
-        try(BufferedReader br = new BufferedReader(new FileReader(resource.getFile()))){
-            //Ocurre algo aqui
+        try (BufferedReader br = new BufferedReader(new FileReader(resource.getFile()))) {
+
             String linea;
-            while ((linea = br.readLine()) !=null){
+            while ((linea = br.readLine()) != null) {
 
-                String [] datos = linea.split(";");
-
-                if(loginRequestDTO.tipoDocumento().equals(datos[0])
-                        && loginRequestDTO.numeroDocumento().equals(datos[1])
-                        && loginRequestDTO.password().equals(datos[3])){
+                String[] datos = linea.split(";");
+                if (loginRequestDTO.tipoDocumento().equals(datos[0]) &&
+                        loginRequestDTO.numeroDocumento().equals(datos[1]) &&
+                        loginRequestDTO.password().equals(datos[2])) {
 
                     datosUsuario = new String[2];
                     datosUsuario[0] = datos[3]; // Recuperar nombre
-                    datosUsuario[1] = datos[4]; // Recuperar Correo
+                    datosUsuario[1] = datos[4]; // Recuperar correo
+                    break;
+
                 }
+
             }
 
-        } catch (IOException e){
+        } catch (IOException e) {
 
             datosUsuario = null;
             throw new IOException(e);
-        }
 
+        }
 
         return datosUsuario;
     }
+
 }
