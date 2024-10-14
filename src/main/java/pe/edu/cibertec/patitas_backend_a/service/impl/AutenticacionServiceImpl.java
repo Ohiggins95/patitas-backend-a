@@ -5,11 +5,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import pe.edu.cibertec.patitas_backend_a.dto.LoginRequestDTO;
+import pe.edu.cibertec.patitas_backend_a.dto.LogoutRequestDTO;
 import pe.edu.cibertec.patitas_backend_a.service.AutenticacionService;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 
 @Service
 public class AutenticacionServiceImpl implements AutenticacionService {
@@ -33,9 +37,11 @@ public class AutenticacionServiceImpl implements AutenticacionService {
                         loginRequestDTO.numeroDocumento().equals(datos[1]) &&
                         loginRequestDTO.password().equals(datos[2])) {
 
-                    datosUsuario = new String[2];
+                    datosUsuario = new String[4];
                     datosUsuario[0] = datos[3]; // Recuperar nombre
                     datosUsuario[1] = datos[4]; // Recuperar correo
+                    datosUsuario[2] = datos[0];
+                    datosUsuario[3] = datos[1];
                     break;
 
                 }
@@ -52,4 +58,29 @@ public class AutenticacionServiceImpl implements AutenticacionService {
         return datosUsuario;
     }
 
+    @Override
+    public String[] logout(LogoutRequestDTO logoutRequestDTO) throws IOException {
+
+        String[] datosUsuario = new String[3];
+        datosUsuario[0] = logoutRequestDTO.tipoDocumento();
+        datosUsuario[1] = logoutRequestDTO.numeroDocumento();
+        datosUsuario[2] = LocalDateTime.now().toString();
+        File archivo = new File("src/main/resources/logoutlog.txt");
+        if (!archivo.exists()) {
+            archivo.createNewFile();
+        }
+        try (BufferedWriter bf = new BufferedWriter(new FileWriter(archivo, true))) {
+            String linea = logoutRequestDTO.tipoDocumento() + ";" +
+                    logoutRequestDTO.numeroDocumento() + ";" +
+                    LocalDateTime.now().toString() + "\n";
+
+            bf.write(linea);
+
+        } catch (IOException e) {
+            datosUsuario = null;
+            throw new IOException("Error al escribir en logoutlog.txt", e);
+        }
+
+        return datosUsuario;
+    }
 }
