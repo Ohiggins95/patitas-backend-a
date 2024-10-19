@@ -71,8 +71,7 @@ public class AutenticacionServiceImpl implements AutenticacionService {
         }
         try (BufferedWriter bf = new BufferedWriter(new FileWriter(archivo, true))) {
             String linea = logoutRequestDTO.tipoDocumento() + ";" +
-                    logoutRequestDTO.numeroDocumento() + ";" +
-                    LocalDateTime.now().toString() + "\n";
+                    logoutRequestDTO.numeroDocumento() + ";" +LocalDateTime.now().toString() + "\n";
 
             bf.write(linea);
 

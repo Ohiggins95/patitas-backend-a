@@ -3,7 +3,6 @@ package pe.edu.cibertec.patitas_backend_a.service;
 
 
 import pe.edu.cibertec.patitas_backend_a.dto.LoginRequestDTO;
-import pe.edu.cibertec.patitas_backend_a.dto.LoginResponseDTO;
 import pe.edu.cibertec.patitas_backend_a.dto.LogoutRequestDTO;
 
 import java.io.IOException;
